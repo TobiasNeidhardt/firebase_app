@@ -1,4 +1,5 @@
 import 'package:firebase_app/services/auth.dart';
+import 'package:firebase_app/shared/loading.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
@@ -13,14 +14,15 @@ class SignIn extends StatefulWidget {
 class _SignInState extends State<SignIn> {
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
+  bool loading = false;
 
   String email = "";
   String password = "";
-  String error ="";
+  String error = "";
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return loading ? Loading() : Scaffold(
       backgroundColor: Colors.brown[100],
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
@@ -70,7 +72,7 @@ class _SignInState extends State<SignIn> {
                 TextFormField(
                   obscureText: true,
                   validator: (val) =>
-                  val.length < 6 ? "More than 6 chars please" : null,
+                      val.length < 6 ? "More than 6 chars please" : null,
                   onChanged: (value) {
                     setState(() {
                       password = value;
@@ -83,16 +85,27 @@ class _SignInState extends State<SignIn> {
                 TextButton(
                     onPressed: () async {
                       if (_formKey.currentState.validate()) {
-                        dynamic result = await _auth
-                            .loginWithEmailAndPassword(email, password);
+                        setState(() {
+                          loading = true;
+                        });
+                        dynamic result = await _auth.loginWithEmailAndPassword(
+                            email, password);
                         if (result == null) {
-                          setState(() => error = "Please supply a valid email");
+                          setState(() {
+                            error = "Please supply a valid email";
+                            loading = false;
+                          });
                         }
                       }
                     },
                     child: Text("Login")),
-                SizedBox(height: 20,),
-                Text(error,style: TextStyle(color: Colors.red),)
+                SizedBox(
+                  height: 20,
+                ),
+                Text(
+                  error,
+                  style: TextStyle(color: Colors.red),
+                )
               ],
             ),
           )),
