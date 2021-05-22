@@ -1,16 +1,16 @@
-import 'package:firebase_app/services/auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_app/services/auth.dart';
 
-class SignIn extends StatefulWidget {
+class Register extends StatefulWidget {
+
   final Function toggleView;
-
-  SignIn({this.toggleView});
+  Register({this.toggleView});
 
   @override
-  _SignInState createState() => _SignInState();
+  _RegisterState createState() => _RegisterState();
 }
 
-class _SignInState extends State<SignIn> {
+class _RegisterState extends State<Register> {
   final AuthService _auth = AuthService();
 
   String email = "";
@@ -23,14 +23,11 @@ class _SignInState extends State<SignIn> {
       appBar: AppBar(
         backgroundColor: Colors.brown[400],
         elevation: 0.0,
-        title: Text("Sign In"),
+        title: Text("Register"),
         actions: [
-          TextButton.icon(
-              onPressed: () {
-                widget.toggleView();
-              },
-              icon: Icon(Icons.person),
-              label: Text("Register"))
+          TextButton.icon(onPressed: (){
+            widget.toggleView();
+          }, icon: Icon(Icons.person), label: Text("Sign In"))
         ],
       ),
       body: Container(
@@ -38,18 +35,6 @@ class _SignInState extends State<SignIn> {
           child: Form(
             child: Column(
               children: [
-                TextButton(
-                  child: Text("Sign In Anonym"),
-                  onPressed: () async {
-                    dynamic result = await _auth.signInAnonym();
-                    if (result == null) {
-                      print("Failed to Sign In");
-                    } else {
-                      print("Signed In");
-                      print(result.uid);
-                    }
-                  },
-                ),
                 SizedBox(
                   height: 20,
                 ),
@@ -74,7 +59,7 @@ class _SignInState extends State<SignIn> {
                 SizedBox(
                   height: 20,
                 ),
-                TextButton(onPressed: () async {}, child: Text("Login"))
+                TextButton(onPressed: () async {}, child: Text("Register"))
               ],
             ),
           )),
