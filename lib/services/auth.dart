@@ -7,13 +7,13 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
 //  Create User Object based on Firebase User
-  User _userFromFireBaseUser(FirebaseUser user) {
-    return user != null ? User(uid: user.uid) : null;
+  UserLocal _userFromFireBaseUser(User user) {
+    return user != null ? UserLocal(uid: user.uid) : null;
   }
 
 //auth change user stream
-  Stream<User> get user {
-    return _auth.onAuthStateChanged
+  Stream<UserLocal> get user {
+    return _auth.authStateChanges()
         // .map((FirebaseUser user) => _userFromFireBaseUser(user));   this is the same as the line below
         .map(_userFromFireBaseUser);
   }
@@ -21,8 +21,8 @@ class AuthService {
 //  Sign in anonym
   Future signInAnonym() async {
     try {
-      AuthResult result = await _auth.signInAnonymously();
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.signInAnonymously();
+      User user = result.user;
       return _userFromFireBaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -33,8 +33,8 @@ class AuthService {
 //Sign in with mail and pw
   Future loginWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.signInWithEmailAndPassword(email: email, password: password);
+      User user = result.user;
       return _userFromFireBaseUser(user);
     } catch (e) {
       print(e.toString());
@@ -44,8 +44,8 @@ class AuthService {
 //register with mail and pw
   Future registerWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      FirebaseUser user = result.user;
+      UserCredential result = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      User user = result.user;
       //Create a new document for the user with the uid
       await DatabaseService(uid:user.uid).updateUserData("Würzburger Fussballclub", "Würzburg", "Sport");
       return _userFromFireBaseUser(user);

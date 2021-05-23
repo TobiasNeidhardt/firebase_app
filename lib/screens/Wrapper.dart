@@ -8,7 +8,7 @@ import 'package:firebase_app/models/user.dart';
 class Wrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    final user = Provider.of<UserLocal>(context);
     if(user == null){
       //  return either Home or Authenticate Widget
       return Authenticate();

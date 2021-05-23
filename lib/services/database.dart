@@ -8,10 +8,10 @@ class DatabaseService {
 
 //  collection reference
   final CollectionReference clubsCollection =
-      Firestore.instance.collection("clubs");
+      FirebaseFirestore.instance.collection("clubs");
 
   Future updateUserData(String name, String city, String category) async {
-    return await clubsCollection.document(uid).setData({
+    return await clubsCollection.doc(uid).set({
       'name': name,
       'city': city,
       'category': category,
@@ -20,11 +20,11 @@ class DatabaseService {
 
 //  Club list from snapshot
   List<Club> _clubListFromSnapshot(QuerySnapshot snapshot) {
-    return snapshot.documents.map((doc) {
+    return snapshot.docs.map((doc) {
       return Club(
-        name: doc.data['name'] ?? '',
-        city: doc.data['city'] ?? '',
-        category: doc.data['category'] ?? '',
+        name: doc['name'] ?? '',
+        city: doc['city'] ?? '',
+        category: doc['category'] ?? '',
       );
     }).toList();
   }
